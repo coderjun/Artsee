@@ -2,10 +2,14 @@
 bin/
 bin-debug/
 bin-release/
+# Build and Release Folders (IntelliJ)
+out/
 
 # Other files and folders
 .settings/
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+# I like to keep project files out of my repos. 
+# There's always those dependencies that keep sync status out of whack
+.idea
+
+
