@@ -11,5 +11,6 @@ out/
 # I like to keep project files out of my repos. 
 # There's always those dependencies that keep sync status out of whack
 .idea
+ArtSee_App.iml
 
 
