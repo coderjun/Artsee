@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+  Created by jheider on 5/10/14.
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:view="org.heiders.apps.artsee.view.*"
+    creationComplete="_onCreationComplete( event )">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.core.FlexGlobals;
+            import mx.events.FlexEvent;
+
+            import org.heiders.apps.artsee.control.events.AppViewEvent;
+            import org.heiders.apps.artsee.model.constants.AppViews;
+
+            private function _onCreationComplete(event:FlexEvent):void
+            {
+                this.addEventListener(AppViewEvent.GO_TO_VIEW, _onGoToView);
+            }
+
+            private function _onGoToView(event:AppViewEvent):void
+            {
+                currentState = event.view;
+            }
+        ]]>
+    </fx:Script>
+
+
+    <s:states>
+        <s:State name="start"/>
+        <s:State name="signIn"/>
+        <s:State name="register"/>
+        <s:State name="map"/>
+        <s:State name="list"/>
+        <s:State name="itemAddEdit"/>
+        <s:State name="itemDetail"/>
+    </s:states>
+
+
+    <view:StartView id="startView"
+        height="100%" width="100%"
+        includeIn="start"/>
+
+    <view:AccountView id="accountView"
+        height="100%" width="100%"
+        currentState.signIn="{ AccountView.VIEW_STATE_SIGN_IN }"
+        currentState.register="{ AccountView.VIEW_STATE_REGISTER }"
+        includeIn="signIn,register"/>
+
+    <view:MapView id="mapView"
+        height="100%" width="100%"
+        includeIn="map"/>
+
+    <view:ListView id="listView"
+        height="100%" width="100%"
+        includeIn="list"/>
+
+    <view:ItemAddEditView id="addEditItemView"
+        height="100%" width="100%"
+        includeIn="itemAddEdit"/>
+
+    <view:ItemDisplayView id="displayItemView"
+        height="100%" width="100%"
+        includeIn="itemDetail"/>
+
+    <s:Image id="menuButton"
+        left="35" top="31"
+        height="49" width="49"
+        fillMode="clip"
+        source="assets/images/listView/listView_menuIcon.png"
+        excludeFrom="start,signIn,register,itemAddEdit,itemDetail"
+        click="dispatchEvent( new Event('menuToggle', true ))"/>
+
+    <s:Image id="centerLogo"
+        top="12"
+        horizontalCenter="0"
+        height="89" width="70"
+        source="assets/images/itemAddEditView/addItem_topLogo.png"
+        includeIn="map,list,itemAddEdit,itemDetail"/>
+
+    <s:Image id="addButton"
+        right="35" top="31"
+        height="49" width="49"
+        source="assets/images/listView/listView_addIcon.png"
+        click="dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_ITEM_ADD_EDIT ))"
+        includeIn="map,list"/>
+
+    <!--<s:TextInput id="filterInput"
+        top="109"
+        horizontalCenter="0"
+        width="510" height="41"
+        prompt="search"
+        includeIn="map,list"
+        styleName="fieldText"
+        skinClass="spark.skins.mobile.TextInputSkin"/>-->
+
+    <!--<s:Image id="toggleButton"
+        left="35" bottom="31"
+        height="37" width="60"
+        source.map="assets/images/listView/listView_listIcon.png"
+        source.list="assets/images/listView/listView_mapToggle.png"
+        click.map="dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_LIST ))"
+        click.list="dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_MAP ))"
+        includeIn="map,list"/>-->
+</s:Group>

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+  Created by jheider on 5/10/14.
+-->
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        horizontalAlign="center" gap="30">
+
+    <fx:Script>
+        <![CDATA[
+
+            import org.heiders.apps.artsee.control.events.AppViewEvent;
+            import org.heiders.apps.artsee.model.AppModel;
+
+            import org.heiders.apps.artsee.model.constants.AppViews;
+
+            [Bindable] private var _appModel:AppModel = AppModel.getInstance();
+
+            private function _onEditItemClick( event:MouseEvent ):void
+            {
+                _appModel.editingItem = true;
+                dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_ITEM_ADD_EDIT ));
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Group width="90%">
+        <s:Image
+                top="31" left="36"
+                width="26" height="45"
+                source="assets/images/itemDetailView/detail_backBtn_03.png"
+                click="dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_LIST ))"/>
+
+        <s:Image
+                top="31" right="36"
+                width="38" height="37"
+                source="assets/images/itemDetailView/detail_editIcon_06.png"
+                click="_onEditItemClick( event )"/>
+    </s:Group>
+
+    <s:HGroup width="90%" height="20%" gap="30">
+
+        <s:Image id="picture"
+            width="50%" height="100%"
+            fillMode="scale"
+            source="{ _appModel.selectedItem.photo }"/>
+
+        <s:VGroup width="50%" height="100%">
+
+            <s:Label id="itemName"
+                width="100%" height="40%"
+                text="{ _appModel.selectedItem.name }"
+                styleName="detailTitle"/>
+
+            <s:Label id="storeName"
+                width="100%" height="20%"
+                text="{ _appModel.selectedItem.storeName }"
+                styleName="detailText"/>
+
+            <s:Label id="location"
+                width="100%" height="20%"
+                text="{ _appModel.selectedItem.location }"
+                styleName="detailItalicText"/>
+
+        </s:VGroup>
+
+    </s:HGroup>
+
+    <s:TextArea id="notes"
+        width="90%" height="60%"
+        selectable="false"
+        editable="false"
+        styleName="detailNoteStyle"
+        skinClass="org.heiders.apps.artsee.view.skins.FlatTextAreaSkin"
+        focusSkin="org.heiders.apps.artsee.view.skins.FlatTextAreaSkin"
+        text="{ _appModel.selectedItem.notes }"/>
+</s:VGroup>

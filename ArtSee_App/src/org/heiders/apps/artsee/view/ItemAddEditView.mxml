@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<!--
+  Created by jheider on 5/10/14.
+-->
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:components="org.heiders.apps.artsee.view.components.*"
+        horizontalAlign="center"
+        addedToStage="_onAddedToStage(event)"
+        removedFromStage="_onRemovedFromStage(event)">
+
+    <fx:Script>
+        <![CDATA[
+            import org.heiders.apps.artsee.control.events.AppViewEvent;
+            import org.heiders.apps.artsee.model.AppModel;
+
+            import org.heiders.apps.artsee.model.constants.AppViews;
+            import org.heiders.apps.artsee.model.vo.ArtSupply;
+
+            [Bindable] private var _item:ArtSupply;
+
+            private var _appModel:AppModel = AppModel.getInstance();
+
+            private var _mpLoader:Loader;
+
+            private function _onSnapPhotoClick(event:MouseEvent):void {
+
+                if (CameraUI.isSupported) {
+                    var cameraUI:CameraUI = new CameraUI();
+                        cameraUI.addEventListener(MediaEvent.COMPLETE, _onCameraUIComplete);
+                        cameraUI.addEventListener(Event.CANCEL, _onCameraUICancelled);
+                        cameraUI.addEventListener(ErrorEvent.ERROR, _onCameraError);
+                        cameraUI.launch(MediaType.IMAGE);
+                }
+                else {
+                    trace("CameraUI not supported");
+                }
+            }
+
+            private function _onCameraUIComplete(event:MediaEvent):void {
+                var cameraUI:CameraUI = event.target as CameraUI;
+                    cameraUI.removeEventListener(MediaEvent.COMPLETE, _onCameraUIComplete);
+                    cameraUI.removeEventListener(Event.CANCEL, _onCameraUICancelled);
+                    cameraUI.removeEventListener(ErrorEvent.ERROR, _onCameraError);
+
+                var mediaPromise:MediaPromise = event.data;
+
+                _item.photo = mediaPromise.file.url;
+
+                if (mediaPromise.file == null) {
+                    // For iOS we need to load with a Loader first
+                    _mpLoader = new Loader();
+                    _mpLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, _onMediaPromiseLoaded);
+                    _mpLoader.addEventListener(IOErrorEvent.IO_ERROR, _onMediaPromiseLoadError);
+                    _mpLoader.loadFilePromise(mediaPromise);
+                }
+            }
+
+            private function _onCameraUICancelled(event:Event):void {
+                trace("CameraUI Cancelled");
+            }
+
+            private function _onCameraError(event:ErrorEvent):void {
+                trace("Camera Error Occurred");
+            }
+
+            private function _onMediaPromiseLoaded(event:Event):void {
+                var mpLoaderInfo:LoaderInfo = event.target as LoaderInfo;
+                    mpLoaderInfo.removeEventListener(Event.COMPLETE, _onMediaPromiseLoaded);
+                    mpLoaderInfo.loader.removeEventListener(IOErrorEvent.IO_ERROR, _onMediaPromiseLoadError);
+            }
+
+            private function _onMediaPromiseLoadError(event:IOError):void {
+                trace("Error Loading Picture from File");
+            }
+
+            private function _onAddedToStage(event:Event):void {
+
+                if( _appModel.editingItem && _appModel.selectedItem )
+                {
+                    _item = _appModel.selectedItem;
+                }
+                else
+                {
+                    _item = new ArtSupply();
+                    _item.photo = "assets/images/itemAddEditView/addItem_photoBtn_11.png";
+                }
+            }
+
+            private function _onRemovedFromStage(event:Event):void {
+                _appModel.editingItem = false;
+            }
+
+
+            private function _onItemSave(event:MouseEvent):void
+            {
+                // TODO: Validation would be nice...
+                _item.name = artSupplyName.fieldValue;
+                _item.location = location.fieldValue;
+                _item.notes = notes.text;
+                _item.storeName = storeName.fieldValue;
+                if( photo.source == "assets/images/itemAddEditView/addItem_photoBtn_11.png" )
+                {
+                    _item.photo = "assets/images/listView/listView_itemDefaultIcon.png";
+                }
+                else
+                {
+                    _item.photo = photo.source.toString();
+                }
+
+                if( !_appModel.editingItem )
+                {
+                    _appModel.items.addItem( _item );
+                }
+
+                _appModel.saveData();
+
+                _exitToListOrDetails();
+            }
+
+            private function _exitToListOrDetails():void
+            {
+                if( !_appModel.editingItem )
+                {
+                    dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_LIST ));
+                }
+                else
+                {
+                    dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_ITEM_DETAIL ));
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Group width="90%">
+        <s:Image
+                top="31" left="36"
+                width="40" height="40"
+                source="assets/images/itemAddEditView/addItem_cancelIcon_03.png"
+                click="_exitToListOrDetails()"/>
+
+
+        <s:Image
+                top="31" right="36"
+                width="40" height="40"
+                source="assets/images/itemAddEditView/addItem_saveIcon_03.png"
+                click="_onItemSave(event)"/>
+    </s:Group>
+
+    <components:FlatFormField id="storeName"
+        width="90%"
+        fieldLabel="store name"
+        fieldValue="{ _item.storeName }"/>
+
+    <components:FlatFormField id="artSupplyName"
+        width="90%"
+        fieldLabel="art supply name"
+        fieldValue="{ _item.name }"/>
+
+    <components:FlatFormField id="location"
+        width="90%"
+        fieldLabel="location"
+        fieldValue="{ _item.location }"/>
+
+    <s:Label text="notes"
+        width="90%"
+        styleName="formLabelText"/>
+    <s:TextArea id="notes"
+        width="90%"
+        styleName="detailNoteStyle"
+        text="{ _item.notes }"
+        skinClass="org.heiders.apps.artsee.view.skins.FlatTextAreaSkin"
+        focusSkin="org.heiders.apps.artsee.view.skins.FlatTextAreaSkin"/>
+
+    <s:Label text="photo"
+        width="90%"
+        styleName="formLabelText"/>
+    <s:Image id="photo"
+        width="90%"
+        scaleMode="zoom"
+        source="{ _item.photo }"
+        click="_onSnapPhotoClick( event )"/>
+
+</s:VGroup>

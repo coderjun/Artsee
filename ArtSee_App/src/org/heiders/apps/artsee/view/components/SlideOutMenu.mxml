@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+  Created by jheider on 5/10/14.
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark">
+
+    <fx:Metadata>
+        [Event(name="goToView",type="org.heiders.apps.artsee.control.events.AppViewEvent")]
+    </fx:Metadata>
+
+    <fx:Script>
+        <![CDATA[
+        import org.heiders.apps.artsee.control.events.AppViewEvent;
+        import org.heiders.apps.artsee.model.AppModel;
+        import org.heiders.apps.artsee.model.constants.AppViews;
+        import org.heiders.apps.artsee.model.vo.User;
+
+        private var _appModel:AppModel = AppModel.getInstance();
+
+            private function _onSignOutClick( event:MouseEvent ):void
+            {
+                var user:User = _appModel.user;
+                    user.isLoggedIn = false;
+
+                _appModel.saveData();
+
+                dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_START ));
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Rect width="100%" height="100%">
+        <s:fill>
+            <s:SolidColor color="gray"/>
+        </s:fill>
+    </s:Rect>
+
+    <s:VGroup paddingTop="10" paddingRight="10" paddingBottom="10" paddingLeft="10"
+        width="100%" height="100%"
+        click="_onSignOutClick( event )">
+
+        <!--<s:Label text="Account Info"/>-->
+        <s:Label text="Sign Out"/>
+
+    </s:VGroup>
+
+</s:Group>

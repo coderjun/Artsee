@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  Created by jheider on 5/10/14.
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    creationComplete="_onCreationComplete(event)">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.collections.ArrayCollection;
+            import mx.events.FlexEvent;
+
+            import org.heiders.apps.artsee.control.events.AppViewEvent;
+            import org.heiders.apps.artsee.model.AppModel;
+            import org.heiders.apps.artsee.model.constants.AppViews;
+
+            private var _appModel:AppModel = AppModel.getInstance();
+
+            [Bindable] private var _suppliesAC:ArrayCollection;
+
+            private function _onCreationComplete(event:FlexEvent):void
+            {
+                _suppliesAC = _appModel.items;
+            }
+
+            private function _onSelectedItemChanged(event:Event):void
+            {
+                _appModel.selectedItem = itemList.selectedItem;
+                dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_ITEM_DETAIL ) );
+            }
+        ]]>
+    </fx:Script>
+
+    <s:List id="itemList"
+        top="181" bottom="180"
+        left="31" right="31"
+        dataProvider="{ _suppliesAC }"
+        itemRenderer="org.heiders.apps.artsee.view.renderers.ArtSupplyListRenderer"
+        change="_onSelectedItemChanged(event)"
+        contentBackgroundColor="0xFFFFFF"/>
+
+</s:Group>

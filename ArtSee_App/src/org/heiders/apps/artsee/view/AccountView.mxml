@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!--
+  Created by jheider on 5/10/14.
+-->
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:components="org.heiders.apps.artsee.view.components.*"
+        horizontalAlign="center">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.events.FlexEvent;
+            import mx.events.StateChangeEvent;
+
+            import org.heiders.apps.artsee.control.events.AppViewEvent;
+            import org.heiders.apps.artsee.model.AppModel;
+
+            import org.heiders.apps.artsee.model.constants.AppViews;
+            import org.heiders.apps.artsee.model.vo.User;
+
+            public static const VIEW_STATE_REGISTER:String = "register";
+            public static const VIEW_STATE_SIGN_IN:String = "signIn";
+
+            private var _appModel:AppModel = AppModel.getInstance();
+
+            private function _onRegisterClick(event:MouseEvent):void
+            {
+                if( (email.fieldValue && email.fieldValue.length)
+                    && (password.fieldValue && password.fieldValue.length )
+                    && (confirmPassword.fieldValue && confirmPassword.fieldValue.length )
+                    && (password.fieldValue == confirmPassword.fieldValue) )
+                {
+                    trace("Form Validation Passed");
+                    var user:User = new User();
+                        user.email = email.fieldValue;
+                        user.firstName = firstName.fieldValue;
+                        user.lastName = lastName.fieldValue;
+                        user.isLoggedIn = true;
+                        user.keepLoggedIn = stayLoggedIn.selected;
+                        user.password = password.fieldValue;
+
+                    _appModel.user = user;
+
+                    dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_LIST ));
+                }
+                else
+                {
+                    trace("Form Validation Failed");
+                    // TODO: Add an alert.
+                }
+            }
+
+            private function _onSignInClick(event:MouseEvent):void
+            {
+                var user:User = _appModel.user;
+
+                if( (email.fieldValue && email.fieldValue.length)
+                        && (password.fieldValue && password.fieldValue.length )
+                        && (email.fieldValue == user.email )
+                        && (password.fieldValue == user.password ) )
+                {
+                    trace("Valid Login");
+
+                    user.keepLoggedIn = stayLoggedIn.selected;
+                    user.isLoggedIn = true;
+
+                    _appModel.saveData();
+
+                    dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_LIST ));
+                }
+                else
+                {
+                    trace("Invalid Login");
+                    // TODO: Add an alert.
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <s:states>
+        <s:State name="register"/>
+        <s:State name="signIn"/>
+    </s:states>
+
+    <s:Group width="90%">
+        <s:Image
+            top="34" left="36"
+            width="40" height="40"
+            source="assets/images/createAccountView/createAccount_cancel.png"
+            click="dispatchEvent( new AppViewEvent( AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_START ))"/>
+
+        <s:Image
+            horizontalCenter="0"
+            width="70" height="89"
+            source="assets/images/createAccountView/createAccount_topLogo.png"/>
+    </s:Group>
+
+    <components:FlatFormField id="email"
+            width="90%"
+            fieldLabel="email*"/>
+
+    <components:FlatFormField id="firstName"
+            width="90%"
+            fieldLabel="first name"
+            includeIn="register"/>
+
+    <components:FlatFormField id="lastName"
+            width="90%"
+            fieldLabel="last name"
+            includeIn="register"/>
+
+    <components:FlatFormField id="password"
+            width="90%"
+            fieldLabel="password*"
+            fieldIsPassword="true"/>
+
+    <components:FlatFormField id="confirmPassword"
+            width="90%"
+            fieldLabel="confirm password*"
+            fieldIsPassword="true"
+            includeIn="register"/>
+
+    <s:CheckBox id="stayLoggedIn"
+        label="Keep me logged in"
+        width="90%"
+        selected="true"
+        styleName="formCheckboxText"/>
+
+    <s:HGroup width="90%" horizontalAlign="center">
+        <s:Image id="signInButton"
+            height="115" width="514"
+            source.register="assets/images/createAccountView/createAccount_createBtn.png"
+            source.signIn="assets/images/createAccountView/createAccount_signIn.png"
+            click.register="_onRegisterClick(event)"
+            click.signIn="_onSignInClick(event)"/>
+    </s:HGroup>
+
+</s:VGroup>

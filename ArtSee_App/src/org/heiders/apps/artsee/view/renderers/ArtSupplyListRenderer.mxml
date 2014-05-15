@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+  Created by jheider on 5/11/14.
+-->
+<s:IconItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    iconField="photo"
+    iconFillMode="clip"
+    iconHeight="80" iconWidth="80"
+    labelField="name"
+    height="100"
+    styleName="listItemText">
+
+    <fx:Script>
+        <![CDATA[
+            override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void
+            {
+                // We're overriding drawBorder since we don't actually want one.
+            }
+        ]]>
+    </fx:Script>
+
+</s:IconItemRenderer>

@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!--
+  Created by jheider on 5/10/14.
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    creationComplete="_onCreationComplete(event)">
+
+    <fx:Script>
+        <![CDATA[
+        import mx.events.FlexEvent;
+
+        import org.heiders.apps.artsee.control.events.AppViewEvent;
+        import org.heiders.apps.artsee.model.AppModel;
+        import org.heiders.apps.artsee.model.constants.AppViews;
+
+        private var _appModel:AppModel = AppModel.getInstance();
+
+        private function _onCreationComplete(event:FlexEvent):void {
+            var gestureSwipeSupported:Boolean;
+
+            Multitouch.inputMode = MultitouchInputMode.GESTURE;
+
+            // FYI, ADL on Mac Returns
+            //  [trace] Supported Gestures: gestureZoom,gesturePan,gestureRotate,gestureSwipe
+            //  [trace] Supported Gestures Length: 4
+            //  [trace] Swipe Support Found?: 3
+            trace( "Supported Gestures: " + Multitouch.supportedGestures );
+            trace( "Supported Gestures Length: " + Multitouch.supportedGestures.length );
+            trace( "Swipe Support Found?: " +  Multitouch.supportedGestures.indexOf(TransformGestureEvent.GESTURE_SWIPE) );
+
+
+            if (Multitouch.supportedGestures == null || Multitouch.supportedGestures.length == 0 || Multitouch.supportedGestures.indexOf(TransformGestureEvent.GESTURE_SWIPE) == -1)
+            {
+                // Multitouch Gesture Swipe Not Supported
+                trace("Gesture Swipe Not Supported on this device");
+                gestureSwipeSupported = false;
+            }
+            else
+            {
+                // Multitouch Gesture Swipe Supported
+                this.addEventListener( TransformGestureEvent.GESTURE_SWIPE, _onChangeViewRequest );
+                gestureSwipeSupported = true;
+            }
+
+            trace( "Player Type: " + Capabilities.playerType +
+                    "\nIs Debugger? " + Capabilities.isDebugger +
+                    "\nCPU Architecture? " + Capabilities.cpuArchitecture );
+
+            // I know...Android x86 support is coming. We could use Capabilities.os "Windows", "Mac", "Linux"
+            // but we have to be careful since some versions of Android OS e.g. CynogenMod will report as "Linux"
+            if( !gestureSwipeSupported  || (Capabilities.cpuArchitecture.indexOf( "x86") != -1) )
+            {
+                // We'll add click action for non-supported devices and desktop ADL as well.
+                this.addEventListener( MouseEvent.CLICK, _onChangeViewRequest );
+            }
+        }
+
+
+        private function _onChangeViewRequest(event:Event):void {
+            if( event is TransformGestureEvent )
+            {
+                var swipeEvent:TransformGestureEvent = event as TransformGestureEvent;
+
+                // Swipe in the direction of the arrow only (left == offsetX -1)
+                if ( swipeEvent.offsetX == 1 || swipeEvent.offsetY == 1 || swipeEvent.offsetY == -1  ) {
+                    return;
+                }
+            }
+
+            var changeViewEvent:AppViewEvent;
+
+            if( _appModel.user )
+            {
+                changeViewEvent = new AppViewEvent(AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_SIGN_IN);
+            }
+            else
+            {
+                changeViewEvent = new AppViewEvent(AppViewEvent.GO_TO_VIEW, AppViews.APP_VIEW_REGISTER);
+            }
+
+            dispatchEvent(changeViewEvent);
+        }
+
+
+        ]]>
+    </fx:Script>
+
+    <s:Image id="splashImage"
+        width="100%" height="100%"
+        scaleMode="zoom"
+        source="assets/images/splashView/splash_image.png"/>
+
+</s:Group>

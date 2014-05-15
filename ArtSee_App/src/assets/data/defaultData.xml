@@ -1,0 +1,46 @@
+<defaultData>
+    <supplies>
+        <supply>
+            <name><![CDATA[Round Sable Brush]]></name>
+            <photo><![CDATA[assets/images/listView/listView_itemDefaultIcon.png]]></photo>
+            <storeName><![CDATA[Ptarmigan Art Supply]]></storeName>
+            <location><![CDATA[Denver, CO]]></location>
+            <notes><![CDATA[Qapla'. Dah tlhingan hol mu ghom a dalegh.  Qawhaqvam chenmohlu di wiqipe diya ohvad ponglu.]]></notes>
+        </supply>
+        <supply>
+            <name><![CDATA[Flat Squirrel Hair Brush]]></name>
+            <photo><![CDATA[assets/images/listView/listView_itemDefaultIcon.png]]></photo>
+            <storeName><![CDATA[The Art Store]]></storeName>
+            <location><![CDATA[Seattle, WA]]></location>
+            <notes><![CDATA[I felt dreadfully. But there was no help for it]]></notes>
+        </supply>
+        <supply>
+            <name><![CDATA[Gesso - Matte]]></name>
+            <photo><![CDATA[assets/images/listView/listView_itemDefaultIcon.png]]></photo>
+            <storeName><![CDATA[Supplies for Starving Artists]]></storeName>
+            <location><![CDATA[Taos, NM]]></location>
+            <notes><![CDATA[Like burnt meat! I was hurt across the back by the fall of the horse]]></notes>
+        </supply>
+        <supply>
+            <name><![CDATA[Xantham Gum]]></name>
+            <photo><![CDATA[assets/images/listView/listView_itemDefaultIcon.png]]></photo>
+            <storeName><![CDATA[Supplies for Starving Artists]]></storeName>
+            <location><![CDATA[Taos, NM]]></location>
+            <notes><![CDATA[Like burnt meat! I was hurt across the back by the fall of the horse]]></notes>
+        </supply>
+        <supply>
+            <name><![CDATA[Linseed Oil]]></name>
+            <photo><![CDATA[assets/images/listView/listView_itemDefaultIcon.png]]></photo>
+            <storeName><![CDATA[Hippo Art Supply]]></storeName>
+            <location><![CDATA[Denver, CO]]></location>
+            <notes><![CDATA[Qapla'. Dah tlhingan hol mu ghom a dalegh.  Qawhaqvam chenmohlu di wiqipe diya ohvad ponglu.]]></notes>
+        </supply>
+        <supply>
+            <name><![CDATA[Cold pressed illustration board]]></name>
+            <photo><![CDATA[assets/images/listView/listView_itemDefaultIcon.png]]></photo>
+            <storeName><![CDATA[Hippo Art Supply]]></storeName>
+            <location><![CDATA[Denver, CO]]></location>
+            <notes><![CDATA[Like burnt meat! I was hurt across the back by the fall of the horse]]></notes>
+        </supply>
+    </supplies>
+</defaultData>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+  Created by jheider on 5/11/14.
+-->
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark">
+
+    <fx:Script>
+        <![CDATA[
+            [Bindable] public var fieldLabel:String;
+            [Bindable] public var fieldValue:String;
+            [Bindable] public var fieldIsPassword:Boolean;
+        ]]>
+    </fx:Script>
+
+    <s:Label text="{ fieldLabel }"
+        width="100%"
+        styleName="formLabelText"/>
+
+    <s:TextInput
+        width="100%"
+        styleName="formfieldStyle"
+        text="@{ fieldValue }"
+        displayAsPassword="{ fieldIsPassword }"
+        skinClass="org.heiders.apps.artsee.view.skins.FlatFormFieldSkin"
+        focusSkin="org.heiders.apps.artsee.view.skins.FlatFormFieldSkin"/>
+
+</s:VGroup>

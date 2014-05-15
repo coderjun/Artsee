@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:containers="org.heiders.apps.artsee.view.containers.*"
+    xmlns:components="org.heiders.apps.artsee.view.components.*"
+    splashScreenImage="@Embed( 'assets/images/splashView/splash_bg.png' )"
+    applicationDPI="320"
+    creationComplete="_onCreationComplete( event )">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.events.FlexEvent;
+            import mx.rpc.events.FaultEvent;
+            import mx.rpc.events.ResultEvent;
+
+            import org.heiders.apps.artsee.control.events.AppViewEvent;
+
+            import org.heiders.apps.artsee.model.AppModel;
+            import org.heiders.apps.artsee.model.constants.AppViews;
+            import org.heiders.apps.artsee.model.vo.ArtSupply;
+            import org.heiders.apps.artsee.model.vo.DataStore;
+
+            private var _appModel:AppModel = AppModel.getInstance();
+            private var _dataStore:File;
+
+
+            private function _onCreationComplete( event:FlexEvent ):void
+            {
+                _dataStore = _appModel.dataStore;
+
+                if( _dataStore.exists )
+                {
+                    var stream:FileStream = new FileStream();
+                        stream.open( _dataStore, FileMode.READ );
+
+                    var dataStore:DataStore = stream.readObject() as DataStore;
+
+                    if( dataStore.items )
+                    {
+                        _appModel.items.source = dataStore.items;
+                    }
+                    if( dataStore.user )
+                    {
+                        _appModel.user = dataStore.user;
+                    }
+
+                    stream.close();
+
+                }
+                else
+                {
+                    defaultDataService.send();
+                }
+
+                this.addEventListener( "menuToggle", _onMenuToggle );
+
+                if( _appModel.user )
+                {
+                    var changeViewEvent:AppViewEvent;
+
+                    if( _appModel.user.isLoggedIn && _appModel.user.keepLoggedIn )
+                    {
+                        trace("User is logged in and selected to stay logged in...go to list");
+                        appViewContainer.currentState = AppViews.APP_VIEW_LIST;
+                    }
+                    else
+                    {
+                        trace("User needs to re-login");
+                        appViewContainer.currentState = AppViews.APP_VIEW_SIGN_IN;
+                    }
+                }
+            }
+
+            private function _onMenuToggle( event:Event ):void
+            {
+                currentState == "menuInvisible"? currentState = "menuVisible" : currentState = "menuInvisible";
+            }
+
+            private function _onDefaultDataServiceResult( event:ResultEvent ):void
+            {
+                var defaultData:XML = event.result as XML;
+                var supplies:Array = [];
+                var supply:ArtSupply;
+
+                for each( var item:XML in defaultData.supplies.supply )
+                {
+                    supply = new ArtSupply();
+                    supply.name = item.name;
+                    supply.location = item.location;
+                    supply.notes = item.notes;
+                    supply.photo = item.photo;
+                    supply.storeName = item.storeName;
+
+                    supplies.push( supply );
+                }
+
+                _appModel.items.source = supplies;
+            }
+
+            private function _onDefaultDataServiceFault( event:FaultEvent ):void
+            {
+                trace( "Oops...error loading default data");
+            }
+
+            private function _onGoToView( event:AppViewEvent ):void
+            {
+                currentState = "menuInvisible";
+                appViewContainer.currentState = AppViews.APP_VIEW_START;
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <s:HTTPService id="defaultDataService"
+            url="assets/data/defaultData.xml"
+            resultFormat="e4x"
+            result="_onDefaultDataServiceResult(event)"
+            fault="_onDefaultDataServiceFault(event)"/>
+    </fx:Declarations>
+
+    <fx:Style source="assets/styles/artsee.css"/>
+
+    <s:states>
+        <s:State name="menuInvisible"/>
+        <s:State name="menuVisible"/>
+    </s:states>
+
+    <s:layout>
+        <s:HorizontalLayout/>
+    </s:layout>
+
+    <components:SlideOutMenu id="slideOutMenu"
+        height="100%"
+        width="0" width.menuVisible="80%"
+        visible="false" visible.menuVisible="true"
+        goToView="_onGoToView( event )"/>
+
+    <containers:ViewContainer id="appViewContainer"
+        height="100%"
+        width="100%"/>
+
+</s:Application>
