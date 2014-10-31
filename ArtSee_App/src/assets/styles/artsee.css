@@ -4,37 +4,43 @@
 @font-face {
     src: url("/assets/fonts/Lato-Regular.ttf");
     fontFamily: latoRegular;
-    fontStyle: normal;
     fontWeight: normal;
     embedAsCFF: false;
-    advancedAntiAliasing: true;
 }
 
 @font-face {
     src: url("/assets/fonts/Lato-Regular.ttf");
     fontFamily: latoRegularCFF;
-    fontStyle: normal;
     fontWeight: normal;
     embedAsCFF: true;
-    advancedAntiAliasing: true;
 }
 
 @font-face {
     src: url("/assets/fonts/Lato-Black.ttf");
     fontFamily: latoBlack;
-    fontStyle: normal;
-    fontWeight: normal;
+    fontWeight: bold;
+    embedAsCFF: false;
+}
+
+@font-face {
+    src: url("/assets/fonts/Lato-Black.ttf");
+    fontFamily: latoBlackCFF;
+    fontWeight: bold;
     embedAsCFF: true;
-    advancedAntiAliasing: true;
 }
 
 @font-face {
     src: url("/assets/fonts/Lato-Italic.ttf");
     fontFamily: latoItalic;
-    fontStyle: normal;
+    fontWeight: normal;
+    embedAsCFF: false;
+}
+
+@font-face {
+    src: url("/assets/fonts/Lato-Italic.ttf");
+    fontFamily: latoItalicCFF;
     fontWeight: normal;
     embedAsCFF: true;
-    advancedAntiAliasing: true;
 }
 
 /* SPLASH PAGE */
@@ -80,7 +86,7 @@
 
 .detailTitle
 {
-    font-family: latoBlack;
+    font-family: latoBlackCFF;
     font-size: 36;
     font-weight: bold;
     color: #404041;
@@ -95,7 +101,7 @@
 
 .detailItalicText
 {
-    font-family: latoItalic;
+    font-family: latoItalicCFF;
     font-size: 24;
     color: #404041;
 }
